@@ -26,7 +26,8 @@ const updateById = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const UsersController = {
-  read: [UsersMiddleware.emailExists, UsersMiddleware.appendData, read],
+  read: [UsersMiddleware.userExists, UsersMiddleware.appendData, read],
+  readByEmail: [UsersMiddleware.emailExists, UsersMiddleware.appendData, read],
   update: [
     UsersMiddleware.userExists,
     UsersMiddleware.isValidUser,

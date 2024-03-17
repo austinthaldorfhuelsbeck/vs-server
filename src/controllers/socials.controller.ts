@@ -4,9 +4,8 @@ import SocialsMiddleware from "../middleware/socials.middleware";
 
 const read = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { userId } = req.query;
-    const socials = await Social.find({ userId });
-    res.json({ data: socials });
+    const { foundSocial } = res.locals;
+    res.json({ data: foundSocial });
   } catch (error) {
     next(error);
   }
