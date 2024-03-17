@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { User } from "../db/models/User";
 import UsersMiddleware from "../middleware/users.middleware";
 
-const getByEmail = async (req: Request, res: Response, next: NextFunction) => {
+const read = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    res.json({ data: res.locals.foundUser });
+    const { foundUser } = res.locals;
+    res.json({ data: foundUser });
   } catch (error) {
     next(error);
   }
@@ -18,14 +19,20 @@ const updateById = async (req: Request, res: Response, next: NextFunction) => {
       { $set: validUser },
       { new: true }
     );
-    res.json({ data: updatedUser });
+    res.locals.foundUser = updatedUser;
   } catch (error) {
     next(error);
   }
 };
 
 const UsersController = {
-  read: [UsersMiddleware.emailExists, getByEmail],
-  update: [UsersMiddleware.userExists, UsersMiddleware.isValidUser, updateById],
+  read: [UsersMiddleware.emailExists, UsersMiddleware.appendGalleries, read],
+  update: [
+    UsersMiddleware.userExists,
+    UsersMiddleware.isValidUser,
+    updateById,
+    UsersMiddleware.appendGalleries,
+    read,
+  ],
 };
 export default UsersController;

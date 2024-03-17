@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { Gallery } from "../db/models/Gallery";
 import { User } from "../db/models/User";
 
 const emailExists = async (req: Request, res: Response, next: NextFunction) => {
@@ -31,10 +32,22 @@ const isValidUser = async (req: Request, res: Response, next: NextFunction) => {
   return next();
 };
 
+const appendGalleries = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { foundUser } = res.locals;
+  const galleries = await Gallery.find({ userId: foundUser._id });
+  res.locals.foundUser = { ...foundUser._doc, galleries };
+  return next();
+};
+
 const UsersMiddleware = {
   emailExists,
   userExists,
   isValidUser,
+  appendGalleries,
 };
 
 export default UsersMiddleware;
