@@ -6,8 +6,8 @@ const socialExists = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { id } = req.params;
-  const social = await Social.findById(id);
+  const { userId } = req.query;
+  const social = await Social.findOne({ userId });
   if (!social) return next({ status: 404, message: "Social not found" });
   res.locals.foundSocial = social;
   return next();
