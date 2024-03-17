@@ -39,10 +39,10 @@ const appendVideos = async (
   return next();
 };
 
-const galleriesMiddleware = {
+const GalleriesMiddleware = {
   galleryExists,
   isValidGallery,
   appendVideos,
 };
 
-export default galleriesMiddleware;
+export default GalleriesMiddleware;
