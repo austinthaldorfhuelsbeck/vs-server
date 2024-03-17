@@ -12,11 +12,7 @@ const getByUserId = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getByGalleryId = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const read = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { foundGallery } = res.locals;
     res.json({ data: foundGallery });
@@ -43,7 +39,7 @@ const updateById = async (req: Request, res: Response, next: NextFunction) => {
       { $set: validGallery },
       { new: true }
     );
-    res.json({ data: updatedGallery });
+    res.locals.foundGallery = updatedGallery;
   } catch (error) {
     next(error);
   }
@@ -61,12 +57,18 @@ const destroy = async (req: Request, res: Response, next: NextFunction) => {
 
 const GalleriesController = {
   list: getByUserId,
-  read: [GalleriesMiddleware.galleryExists, getByGalleryId],
+  read: [
+    GalleriesMiddleware.galleryExists,
+    GalleriesMiddleware.appendVideos,
+    read,
+  ],
   create: [GalleriesMiddleware.isValidGallery, create],
   update: [
     GalleriesMiddleware.galleryExists,
     GalleriesMiddleware.isValidGallery,
     updateById,
+    GalleriesMiddleware.appendVideos,
+    read,
   ],
   delete: [GalleriesMiddleware.galleryExists, destroy],
 };

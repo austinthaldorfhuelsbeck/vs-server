@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Gallery } from "../db/models/Gallery";
+import { Video } from "../db/models/Video";
 
 const galleryExists = async (
   req: Request,
@@ -27,9 +28,21 @@ const isValidGallery = async (
   return next();
 };
 
+const appendVideos = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { foundGallery } = res.locals;
+  const videos = await Video.find({ galleryId: foundGallery._id });
+  res.locals.foundGallery = { ...foundGallery._doc, videos };
+  return next();
+};
+
 const galleriesMiddleware = {
   galleryExists,
   isValidGallery,
+  appendVideos,
 };
 
 export default galleriesMiddleware;
