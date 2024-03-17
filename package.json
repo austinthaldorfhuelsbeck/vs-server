@@ -4,8 +4,11 @@
   "description": "Quick MongoDB and Express server for Vowsuite demo",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && npm run start",
     "start": "node dist/index.js",
+    "postinstall": "tsc",
+    "watch-node": "nodemon dist/index.js",
+    "watch-ts": "tsc -w",
+    "deploy": "git add . && git commit -m Heroku && git push heroku master",
     "dev": "nodemon src/index.ts"
   },
   "repository": {
